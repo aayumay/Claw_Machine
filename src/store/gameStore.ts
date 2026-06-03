@@ -326,6 +326,10 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'claw-machine-save',
+      partialize: (state) => {
+        const { currentScreen, ...rest } = state;
+        return rest;
+      },
     }
   )
 );
