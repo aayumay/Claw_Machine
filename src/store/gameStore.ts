@@ -19,6 +19,19 @@ interface GameState {
   currentScreen: GameScreen;
   setScreen: (screen: GameScreen) => void;
 
+  // Lucky Mode
+  luckyModeActive: boolean;
+  luckyModeTimeLeft: number;
+  luckyCharge: number;
+  triggerLuckyMode: (seconds: number) => void;
+  tickLuckyMode: () => void;
+  addLuckyCharge: (amount: number) => void;
+
+  // PWA Install
+  installPromptEvent: any | null;
+  setInstallPromptEvent: (event: any) => void;
+  clearInstallPromptEvent: () => void;
+
   // Currency & Score
   coins: number;
   score: number;
@@ -47,7 +60,9 @@ interface GameState {
 
   // Leaderboard
   leaderboard: LeaderboardEntry[];
+  lastLeaderboardUpdate: number;
   submitScore: (name: string) => void;
+  simulateLeaderboardActivity: () => void;
 
   // Daily Rewards
   dailyRewards: DailyReward[];
@@ -103,8 +118,33 @@ export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
       // Navigation
-      currentScreen: 'menu' as GameScreen,
+      currentScreen: 'landing' as GameScreen,
       setScreen: (screen) => set({ currentScreen: screen }),
+
+      // Lucky Mode
+      luckyModeActive: false,
+      luckyModeTimeLeft: 0,
+      luckyCharge: 0,
+      triggerLuckyMode: (seconds) => set({ luckyModeActive: true, luckyModeTimeLeft: seconds, luckyCharge: 0 }),
+      tickLuckyMode: () => set((s) => {
+        if (!s.luckyModeActive) return {};
+        const newTime = s.luckyModeTimeLeft - 1;
+        if (newTime <= 0) return { luckyModeActive: false, luckyModeTimeLeft: 0 };
+        return { luckyModeTimeLeft: newTime };
+      }),
+      addLuckyCharge: (amount) => set((s) => {
+        if (s.luckyModeActive) return {}; // Don't charge while active
+        const newCharge = Math.min(100, s.luckyCharge + amount);
+        if (newCharge >= 100) {
+          return { luckyModeActive: true, luckyModeTimeLeft: 30, luckyCharge: 0 };
+        }
+        return { luckyCharge: newCharge };
+      }),
+
+      // PWA Install (Not persisted, runtime only)
+      installPromptEvent: null,
+      setInstallPromptEvent: (event) => set({ installPromptEvent: event }),
+      clearInstallPromptEvent: () => set({ installPromptEvent: null }),
 
       // Currency & Score
       coins: 10,
@@ -153,15 +193,61 @@ export const useGameStore = create<GameState>()(
 
       // Leaderboard
       leaderboard: DEFAULT_LEADERBOARD,
+      lastLeaderboardUpdate: Date.now(),
+      simulateLeaderboardActivity: () => set((s) => {
+        const now = Date.now();
+        // Only run if it's been more than 2 minutes since last check (for demo purposes)
+        if (now - s.lastLeaderboardUpdate < 120000) return {};
+        
+        let boardChanged = false;
+        const newBoard = s.leaderboard.map(entry => {
+          // AI players occasionally gain score
+          if (entry.name !== s.playerName && Math.random() > 0.6) {
+            boardChanged = true;
+            return {
+              ...entry,
+              score: entry.score + Math.floor(Math.random() * 500) + 100,
+              totalWins: entry.totalWins + Math.floor(Math.random() * 2) + 1
+            };
+          }
+          return entry;
+        });
+
+        // Add a random fake player sometimes if board is small
+        if (newBoard.length < 10 && Math.random() > 0.8) {
+          const names = ['ClawGod', 'NeonGrubber', 'LootMaster', 'ArcadeLegend'];
+          const randName = names[Math.floor(Math.random() * names.length)];
+          // Only add if name doesn't exist
+          if (!newBoard.find(e => e.name === randName)) {
+            newBoard.push({
+              name: randName,
+              score: Math.floor(Math.random() * 3000) + 500,
+              totalWins: Math.floor(Math.random() * 15) + 3,
+              date: getToday()
+            });
+            boardChanged = true;
+          }
+        }
+
+        if (boardChanged) {
+          return {
+            leaderboard: newBoard.sort((a, b) => b.score - a.score).slice(0, 10),
+            lastLeaderboardUpdate: now
+          };
+        }
+        return { lastLeaderboardUpdate: now };
+      }),
       submitScore: (name) =>
         set((s) => {
+          // Remove old score for this player if it exists so they only have one entry
+          const filteredBoard = s.leaderboard.filter(e => e.name !== name);
           const entry: LeaderboardEntry = {
             name,
             score: s.score,
             totalWins: s.totalWins,
             date: getToday(),
           };
-          const newBoard = [...s.leaderboard, entry]
+          const newBoard = [...filteredBoard, entry]
             .sort((a, b) => b.score - a.score)
             .slice(0, 10);
           return { leaderboard: newBoard };

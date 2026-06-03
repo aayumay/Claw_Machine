@@ -1,6 +1,15 @@
+import { useGameStore } from '../store/gameStore';
 import './MachineOverlays.css';
 
 export function MachineOverlays() {
+  const { luckyModeActive, luckyModeTimeLeft, luckyCharge } = useGameStore();
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="machine-overlays-container pointer-events-none">
       
@@ -14,9 +23,22 @@ export function MachineOverlays() {
       </div>
 
       {/* ── Right: Lucky Mode ── */}
-      <div className="overlay-lucky">
+      <div className={`overlay-lucky ${luckyModeActive ? 'active animate-pulse-intense' : ''}`}>
         <div className="lucky-title">⚡ LUCKY MODE</div>
-        <div className="lucky-time">00:28</div>
+        
+        {luckyModeActive ? (
+          <div className="lucky-time">{formatTime(luckyModeTimeLeft)}</div>
+        ) : (
+          <div className="lucky-charge-container">
+            <div className="lucky-charge-text">CHARGING... {luckyCharge}%</div>
+            <div className="lucky-charge-bar-bg">
+              <div 
+                className="lucky-charge-bar-fill" 
+                style={{ width: `${luckyCharge}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
       </div>
 
     </div>

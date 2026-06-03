@@ -12,6 +12,8 @@ export const Settings = () => {
     setPlayerName,
     resetProgress,
     setScreen,
+    installPromptEvent,
+    clearInstallPromptEvent,
   } = useGameStore();
 
   const [localName, setLocalName] = useState(playerName);
@@ -26,6 +28,24 @@ export const Settings = () => {
   const handleReset = () => {
     resetProgress();
     setShowConfirm(false);
+  };
+
+  const handleInstallClick = async () => {
+    if (!installPromptEvent) {
+      alert("App installation is not available right now.\n\nThis could be because:\n1. The app is already installed.\n2. You are using Safari/iOS (use 'Share > Add to Home Screen' instead).\n3. You are running in a development environment without HTTPS.");
+      return;
+    }
+    
+    // Show the install prompt
+    installPromptEvent.prompt();
+    
+    // Wait for the user to respond to the prompt
+    const { outcome } = await installPromptEvent.userChoice;
+    
+    // We no longer need the prompt. Clear it up.
+    if (outcome === 'accepted') {
+      clearInstallPromptEvent();
+    }
   };
 
   return (
@@ -75,6 +95,26 @@ export const Settings = () => {
                 onClick={toggleMusic}
               >
                 {musicEnabled ? 'ON' : 'OFF'}
+              </button>
+            </div>
+          </div>
+
+          <div className="settings-group">
+            <h3>App Options</h3>
+            <div className="setting-row">
+              <label>Download App (PWA)</label>
+              <button 
+                className="action-btn"
+                onClick={handleInstallClick}
+                style={{ 
+                  padding: '8px 16px', 
+                  background: 'rgba(0, 255, 150, 0.2)', 
+                  border: '1px solid rgba(0, 255, 150, 0.5)', 
+                  borderRadius: '12px',
+                  color: '#fff'
+                }}
+              >
+                ⬇️ INSTALL
               </button>
             </div>
           </div>

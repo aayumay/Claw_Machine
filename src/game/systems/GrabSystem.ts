@@ -5,6 +5,7 @@
 // prize weight/difficulty, pity timer, and difficulty scaling.
 
 import type { Prize, GrabResult } from '../../types';
+import { useGameStore } from '../../store/gameStore';
 
 /** Configuration constants for grab mechanics */
 const PITY_BONUS_PER_FAIL = 0.20;      // +20% per consecutive failure
@@ -96,9 +97,12 @@ export class GrabSystem {
       MAX_DIFFICULTY_SCALE
     );
 
+    const isLucky = useGameStore.getState().luckyModeActive;
+    const luckyBonus = isLucky ? 0.40 : 0; // Huge 40% buff
+
     const baseProbability = gripStrength - prize.grabDifficulty;
     const adjustedProbability = clamp(
-      baseProbability + pityBonus - difficultyPenalty,
+      baseProbability + pityBonus + luckyBonus - difficultyPenalty,
       MIN_SUCCESS_CHANCE,
       MAX_SUCCESS_CHANCE
     );
@@ -118,8 +122,8 @@ export class GrabSystem {
     // ── Slip check during rise ────────────────────────────
     const weightPenalty = Math.max(0, (prize.weight - 3) * SLIP_WEIGHT_FACTOR);
     const slipChance = clamp(
-      SLIP_BASE_CHANCE + weightPenalty - pityBonus * 0.5,
-      0.02,
+      (SLIP_BASE_CHANCE + weightPenalty - pityBonus * 0.5) * (isLucky ? 0.1 : 1), // 90% slip reduction in lucky mode
+      0.001,
       0.50
     );
 

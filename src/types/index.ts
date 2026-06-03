@@ -81,7 +81,7 @@ export interface DailyReward {
 }
 
 /** Game screen/page */
-export type GameScreen = 'menu' | 'game' | 'inventory' | 'leaderboard' | 'daily' | 'settings';
+export type GameScreen = 'landing' | 'menu' | 'game' | 'inventory' | 'leaderboard' | 'daily' | 'settings';
 
 /** Theme color palette */
 export interface ThemeColors {

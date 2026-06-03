@@ -1,0 +1,56 @@
+.launch-screen {
+  background: var(--color-bg-deep);
+  background-image: radial-gradient(circle at 50% 50%, #1a0a25 0%, #000 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.launch-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.launch-logo {
+  font-family: var(--font-arcade);
+  font-size: 3rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 
+    0 0 10px var(--color-neon-pink),
+    0 0 20px var(--color-neon-pink),
+    0 0 40px var(--color-neon-purple);
+  margin-bottom: 40px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.launch-prompt {
+  font-family: var(--font-modern);
+  font-size: 1.2rem;
+  color: var(--color-neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  animation: blinkPrompt 1.5s infinite;
+}
+
+@keyframes blinkPrompt {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.launch-footer {
+  position: absolute;
+  bottom: 20px;
+  font-family: var(--font-modern);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1px;
+}

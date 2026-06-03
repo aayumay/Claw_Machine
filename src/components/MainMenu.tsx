@@ -59,7 +59,7 @@ export function MainMenu() {
         <div className="hud-profile" onClick={() => setActiveModal('profile')} style={{ cursor: 'pointer' }}>
           <div className="hud-avatar">
             {playerAvatar}
-            <div className="hud-level-badge">12</div>
+            <div className="hud-level-badge">{Math.floor(totalWins / 5) + 1}</div>
           </div>
           <div className="hud-profile-info">
             <span className="hud-name">{playerName || 'ClawMaster'}</span>

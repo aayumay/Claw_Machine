@@ -2,16 +2,20 @@
 // Leaderboard — High Scores Screen
 // ============================================================
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGameStore } from '../store/gameStore';
 import './Leaderboard.css';
 
 export function Leaderboard() {
-  const { leaderboard, score, playerName, setPlayerName, submitScore, setScreen } =
+  const { leaderboard, score, playerName, setPlayerName, submitScore, setScreen, simulateLeaderboardActivity } =
     useGameStore();
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(playerName);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    simulateLeaderboardActivity();
+  }, [simulateLeaderboardActivity]);
 
   const RANK_MEDALS = ['🥇', '🥈', '🥉'];
 
