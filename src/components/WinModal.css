@@ -1,0 +1,196 @@
+/* ============================================================
+   WinModal Styles
+   ============================================================ */
+
+/* ── Overlay ────────────────────────────────────────────────── */
+.win-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.4s ease;
+  cursor: pointer;
+}
+
+.win-overlay.visible {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ── Confetti ───────────────────────────────────────────────── */
+.win-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -10px;
+  left: var(--confetti-x);
+  width: 8px;
+  height: 8px;
+  background: var(--confetti-color);
+  border-radius: 2px;
+  animation: confettiFall var(--confetti-duration) var(--confetti-delay) ease-in forwards;
+  opacity: 0;
+}
+
+.confetti-piece:nth-child(odd) {
+  width: 6px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.confetti-piece:nth-child(3n) {
+  width: 10px;
+  height: 4px;
+}
+
+/* ── Card ───────────────────────────────────────────────────── */
+.win-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) var(--space-xl);
+  background: rgba(20, 10, 40, 0.95);
+  border: 2px solid var(--rarity-color);
+  border-radius: var(--radius-xl);
+  max-width: 360px;
+  width: calc(100% - 48px);
+  cursor: default;
+  opacity: 0;
+  transform: scale(0.5) translateY(40px);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 0 30px color-mix(in srgb, var(--rarity-color) 30%, transparent),
+    0 0 80px color-mix(in srgb, var(--rarity-color) 10%, transparent),
+    0 16px 48px rgba(0, 0, 0, 0.5);
+}
+
+.win-card.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* ── Glow Ring ──────────────────────────────────────────────── */
+.win-glow-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  height: 160px;
+  transform: translate(-50%, -60%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--rarity-color) 15%, transparent) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.rarity-legendary .win-glow-ring {
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--rarity-color) 25%, transparent) 0%,
+    color-mix(in srgb, var(--rarity-color) 8%, transparent) 40%,
+    transparent 70%
+  );
+}
+
+/* ── Exclamation ────────────────────────────────────────────── */
+.win-exclamation {
+  font-family: var(--font-arcade);
+  font-size: var(--text-sm);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 12px currentColor;
+  animation: bounce 0.8s ease;
+}
+
+.rarity-legendary .win-exclamation,
+.rarity-epic .win-exclamation {
+  font-size: var(--text-md);
+  animation: bounce 0.8s ease, textGlow 2s ease-in-out infinite;
+}
+
+/* ── Prize Emoji ────────────────────────────────────────────── */
+.win-prize-emoji {
+  font-size: 4rem;
+  line-height: 1;
+  animation: float 2s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+.rarity-legendary .win-prize-emoji {
+  font-size: 5rem;
+  filter:
+    drop-shadow(0 0 16px var(--rarity-color))
+    drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* ── Prize Name ─────────────────────────────────────────────── */
+.win-prize-name {
+  font-family: var(--font-modern);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text-primary);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Rarity Badge ───────────────────────────────────────────── */
+.win-rarity-badge {
+  font-size: var(--text-xs);
+  padding: 4px 16px;
+  background: color-mix(in srgb, var(--rarity-color) 12%, transparent);
+}
+
+/* ── Score ───────────────────────────────────────────────────── */
+.win-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.win-score-label {
+  font-family: var(--font-modern);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.win-score-value {
+  font-family: var(--font-arcade);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  text-shadow: 0 0 12px currentColor;
+}
+
+/* ── Collect Button ─────────────────────────────────────────── */
+.win-collect-btn {
+  margin-top: var(--space-sm);
+  color: #fff !important;
+  font-family: var(--font-arcade) !important;
+  font-size: var(--text-sm) !important;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  animation: pulseScale 1.5s ease-in-out infinite;
+}
+
+.win-collect-btn:hover {
+  animation: none;
+  transform: translateY(-3px) scale(1.05);
+}

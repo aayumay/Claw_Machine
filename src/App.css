@@ -1,0 +1,49 @@
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: var(--theme-bg, #1a0a2e);
+  color: white;
+  transition: background 0.5s ease;
+}
+
+/* ============================================================
+   Game Screen Layout (Glassmorphism Overlays)
+   ============================================================ */
+
+.game-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  background: radial-gradient(circle at 50% 50%, #1a0a25 0%, #000000 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.game-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(255, 20, 147, 0.1); /* Subtle pink glow on desktop */
+}
+
+/* Ensure Phaser canvas takes up the exact full wrapper */
+#phaser-container {
+  position: relative;
+  width: 100% !important;
+  flex: 1 !important;
+  min-height: 0;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}

@@ -1,0 +1,100 @@
+/* ============================================================
+   HUD Styles (Floating Minimalist)
+   ============================================================ */
+
+.game-top-hud-floating {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: calc(env(safe-area-inset-top, 0px) + 16px) 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  pointer-events: none; /* Let clicks pass through empty space */
+}
+
+/* Back Button */
+.hud-float-btn {
+  pointer-events: auto;
+  background: rgba(10, 5, 20, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 20px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.hud-float-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Right Side Group */
+.hud-float-right {
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.hud-float-pill {
+  display: flex;
+  align-items: center;
+  background: rgba(10, 5, 20, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+  padding: 4px 12px 4px 6px;
+  gap: 8px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hud-float-icon {
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hud-float-val {
+  font-family: var(--font-modern);
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* Desktop Scale */
+@media (min-width: 1024px) {
+  .game-top-hud-floating {
+    padding: 30px;
+  }
+  .hud-float-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+  .hud-float-pill {
+    padding: 6px 16px 6px 8px;
+  }
+  .hud-float-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+  .hud-float-val {
+    font-size: 20px;
+  }
+}
