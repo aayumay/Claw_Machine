@@ -62,10 +62,10 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     roundPixels: false,
   },
 
-  // ── Disable right-click context menu ───────────────────
+ 
   disableContextMenu: true,
 
-  // ── Audio ──────────────────────────────────────────────
+
   audio: {
     noAudio: true, // We use Howler.js instead
   },
